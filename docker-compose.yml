@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+  influxdb:
+    image: "quay.io/influxdb/influxdb:2.0.0-alpha"
+    ports:
+      - "9999:9999"
+    volumes:
+      - /srv/docker/influxdb/data:/var/lib/influxdb
+    networks:
+      backend:
+        ipv4_address: 10.10.0.13
+networks:
+  backend:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.0.0/24
