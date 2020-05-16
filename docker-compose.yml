@@ -9,6 +9,26 @@ services:
     networks:
       backend:
         ipv4_address: 10.10.0.13
+  
+  redis:
+    container_name: influx-monitoring-redis
+    image: redis
+    restart: always
+    hostname: influx-monitoring-redis
+    volumes:
+      - influx-monitoring-redis:/redis/data
+    ports:
+      - 6379:6379
+    environment:
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    networks:
+      backend:
+        ipv4_address: 10.10.0.14
+        
+volumes:
+  influx-monitoring-redis:
+    external: true
+        
 networks:
   backend:
     driver: bridge

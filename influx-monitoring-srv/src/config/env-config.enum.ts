@@ -1,0 +1,5 @@
+export enum EnvConfig {
+  APP_PORT = 'APP_PORT',
+  VISITOR_UNIQUE_BY_IP_MODE = 'VISITOR_UNIQUE_BY_IP_MODE',
+  REDIS_URL = 'REDIS_URL',
+}
