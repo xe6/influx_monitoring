@@ -8,7 +8,14 @@ function App() {
 
     console.log("This is actually happening.");
 
-    setInterval(() => socket.emit('onsite', { url: window.location.href }), 5000);
+    setInterval(
+        () =>
+            socket.emit("onsite", {
+                website: "ezic.io",
+                url: window.location.href,
+            }),
+        5000
+    );
 
     return <h1>WS</h1>;
 }

@@ -20,6 +20,7 @@ export class TsdbGateway implements NestGateway {
     this.visitorUniqueByIpMode = this.configService.get<boolean>(
       EnvConfig.VISITOR_UNIQUE_BY_IP_MODE,
     );
+    this.tsdbService.startAnalytics('ezic.io'); // ? Start for one website only atm
   }
 
   private readonly logger: Logger = new Logger(TsdbGateway.name, true);
@@ -30,7 +31,7 @@ export class TsdbGateway implements NestGateway {
 
   @SubscribeMessage('onsite')
   public async onsite(
-    @MessageBody() data: { url: string },
+    @MessageBody() data: { url: string; website: string },
     @ConnectedSocket() clientSocket: Socket,
   ) {
     if (this.visitorUniqueByIpMode) {
@@ -45,11 +46,17 @@ export class TsdbGateway implements NestGateway {
           Message ignored.\n
           `,
         );
+        clientSocket.disconnect(true); // Disconnect
         return; // Ignore connection and exit method
       }
     }
     this.logger.log(`Received onsite data from client ${clientSocket.id}:`);
     this.logger.log(data);
+    // Refresh in Redis
+    this.tsdbService.refreshActiveUsers(
+      data.website,
+      Object.keys(this.server.sockets.sockets).length,
+    );
   }
 
   public async handleConnection(client: Client, ...args: any[]): Promise<void> {
