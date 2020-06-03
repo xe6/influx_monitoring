@@ -6,8 +6,6 @@ function App() {
     const socket = openSocket(ENDPOINT, { transports: ["websocket"] });
     socket.connect();
 
-    console.log("This is actually happening.");
-
     setInterval(
         () =>
             socket.emit("onsite", {
